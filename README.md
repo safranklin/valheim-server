@@ -1,6 +1,6 @@
 # Valheim on DigitalOcean
 
-Private infrastructure repo for an unmodded, crossplay-enabled Valheim server: up to the standard 10 players, normally around 6, hosted in New York (`nyc3`). WSL is the management machine; it does not need to stay running for people to play.
+Infrastructure repo for an unmodded, crossplay-enabled Valheim server: up to the standard 10 players, normally around 6, hosted in New York (`nyc3`). WSL is the management machine; it does not need to stay running for people to play.
 
 ## Cost and sizing
 

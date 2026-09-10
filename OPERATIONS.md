@@ -3,6 +3,7 @@
 - Server name: `Fartheim`
 - World: `Fartguard`
 - Crossplay: enabled
+- Resource rate: 3× (`-modifier resources most`)
 - DigitalOcean: `nyc3`, 2 vCPU / 4 GB, $24/month before tax
 - Droplet ID: `599196276`
 - Public game address: `45.55.130.209:2456`

@@ -1,1 +1,1 @@
-size       = "s-4vcpu-8gb"    # $48/month before taxes; 4GB alternative: s-2vcpu-4gb ($24).
+size = "s-2vcpu-4gb" # $24/month before taxes; 8GB alternative: s-4vcpu-8gb ($48).

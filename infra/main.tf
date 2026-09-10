@@ -18,7 +18,7 @@ variable "ssh_public_key_path" {
 
 variable "size" {
   type    = string
-  default = "s-4vcpu-8gb"
+  default = "s-2vcpu-4gb"
   validation {
     condition     = contains(["s-2vcpu-4gb", "s-4vcpu-8gb"], var.size)
     error_message = "Choose the $24 4GB or $48 8GB Basic size; verify pricing before applying."

@@ -4,7 +4,7 @@ Private infrastructure repo for an unmodded, crossplay-enabled Valheim server: u
 
 ## Cost and sizing
 
-Default: Basic shared CPU, 4 vCPU / 8 GB (`s-4vcpu-8gb`), listed at $48/month before tax as checked September 9, 2026. The 2 vCPU / 4 GB alternative is $24/month and has less headroom. Neither size guarantees performance for large builds. Check actual region availability and pricing before applying. If $50 includes tax, the default may exceed it: use the $24 size initially or select another host.
+Default: Basic shared CPU, 2 vCPU / 4 GB (`s-2vcpu-4gb`), listed at $24/month before tax as checked September 9, 2026. The 4 vCPU / 8 GB alternative is $48/month and offers more headroom. Neither size guarantees performance for large builds. Check actual region availability and pricing before applying. The $48 upgrade may exceed a $50 total budget after tax.
 
 No paid backups, volumes, snapshots, or object storage are provisioned. Included transfer still has limits; overages can add charges. Set billing alerts in DigitalOcean (alerts are not spending caps). Powering a Droplet off does not stop its charges. Deletion does, but deletes world data too.
 

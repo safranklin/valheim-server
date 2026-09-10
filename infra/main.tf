@@ -53,7 +53,7 @@ resource "digitalocean_firewall" "valheim" {
   # No public SSH. Administration travels through Tailscale.
   inbound_rule {
     protocol         = "udp"
-    port_range       = "2456-2457"
+    port_range       = "2456-2458"
     source_addresses = ["0.0.0.0/0"]
   }
   outbound_rule {

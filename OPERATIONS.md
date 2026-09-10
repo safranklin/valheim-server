@@ -2,7 +2,8 @@
 
 - Server name: `Fartheim`
 - World: `Fartguard`
-- Crossplay: enabled
+- Crossplay: disabled (Steam-only)
+- UDP ports: `2456-2458` published; `2458` is retained as requested though Steam-only mode normally uses `2456-2457`
 - Resource rate: 3× (`-modifier resources most`)
 - DigitalOcean: `nyc3`, 2 vCPU / 4 GB, $24/month before tax
 - Droplet ID: `599196276`

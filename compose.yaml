@@ -6,10 +6,10 @@ services:
     cap_add:
       - SYS_NICE
     ports:
-      - "2456-2457:2456-2457/udp"
+      - "2456-2458:2456-2458/udp"
     env_file: .env
     environment:
-      CROSSPLAY: "true"
+      CROSSPLAY: "false"
       SERVER_ARGS: "-modifier resources most -instanceid fartheim-1"
       TZ: America/New_York
       BACKUPS: "true"

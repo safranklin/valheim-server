@@ -10,7 +10,7 @@ services:
     env_file: .env
     environment:
       CROSSPLAY: "true"
-      SERVER_ARGS: "-modifier resources most"
+      SERVER_ARGS: "-modifier resources most -instanceid fartheim-1"
       TZ: America/New_York
       BACKUPS: "true"
       BACKUPS_CRON: "5 * * * *"

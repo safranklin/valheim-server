@@ -16,15 +16,6 @@ variable "ssh_public_key_path" {
   default = "~/.ssh/id_ed25519.pub"
 }
 
-variable "admin_cidr" {
-  description = "Your public IPv4 address followed by /32; SSH is restricted to this address."
-  type        = string
-  validation {
-    condition     = can(cidrnetmask(var.admin_cidr)) && endswith(var.admin_cidr, "/32")
-    error_message = "Use a single public IPv4 address with /32."
-  }
-}
-
 variable "size" {
   type    = string
   default = "s-4vcpu-8gb"
@@ -59,11 +50,7 @@ resource "digitalocean_droplet" "valheim" {
 resource "digitalocean_firewall" "valheim" {
   name        = "valheim"
   droplet_ids = [digitalocean_droplet.valheim.id]
-  inbound_rule {
-    protocol         = "tcp"
-    port_range       = "22"
-    source_addresses = [var.admin_cidr]
-  }
+  # No public SSH. Administration travels through Tailscale.
   inbound_rule {
     protocol         = "udp"
     port_range       = "2456-2457"

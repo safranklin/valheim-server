@@ -28,7 +28,7 @@ No paid backups, volumes, snapshots, or object storage are provisioned. Included
    export DIGITALOCEAN_TOKEN="$(cat ~/.config/valheim/digitalocean-token)"
    ```
 
-3. Copy the configuration and set `admin_cidr` to your public IPv4 address with `/32`. The SSH public key defaults to `~/.ssh/id_ed25519.pub`.
+3. Copy the configuration and choose the size. The SSH public key defaults to `~/.ssh/id_ed25519.pub`. No public SSH port is opened; administration uses normal OpenSSH over Tailscale.
 
    ```bash
    cp infra/terraform.tfvars.example infra/terraform.tfvars
@@ -45,7 +45,11 @@ No paid backups, volumes, snapshots, or object storage are provisioned. Included
    terraform -chdir=infra apply server.tfplan
    ```
 
-5. Set server name, world and a unique password in `.env`. Use a password of at least 12 letters/numbers to avoid dotenv quoting pitfalls; do not include the password in the server name. Keep the world name stable after playing begins.
+5. Connect WSL and the Droplet to your Tailscale account. Install Tailscale in WSL using the official Linux instructions and run `sudo tailscale up`. On the Droplet, cloud-init installs Tailscale; use DigitalOcean's Recovery Console for initial access (the regular SSH-based Droplet Console cannot cross the closed SSH firewall). Run `cloud-init status --wait`, then `tailscale up --hostname=valheim` and open its login URL in your browser. The Recovery Console may require setting a root password through DigitalOcean first; SSH password authentication remains disabled. No Tailscale enrollment key is stored in Terraform state.
+
+   Run `tailscale ip -4` on the Droplet and set `export VALHEIM_HOST=100.x.y.z` in WSL, replacing the example with that address. Tailnet access policy must allow your WSL device to reach the Droplet on TCP 22; your SSH key still authenticates the session. This uses OpenSSH over Tailscale, not the optional Tailscale SSH feature. Review device key expiry for the long-running server in the Tailscale admin console. Players do not need Tailscale.
+
+6. Set server name, world and a unique password in `.env`. Use a password of at least 12 letters/numbers to avoid dotenv quoting pitfalls; do not include the password in the server name. Keep the world name stable after playing begins.
 
    ```bash
    cp .env.example .env
@@ -61,14 +65,14 @@ No paid backups, volumes, snapshots, or object storage are provisioned. Included
 Crossplay is enabled without client mods. Use the in-game Join Game menu and the server join code from the startup logs, or find the configured server name in the community list. Share the password privately. Join codes can change after restarts.
 
 ```bash
-server_ip=$(terraform -chdir=infra output -raw server_ip)
+server_ip=$VALHEIM_HOST
 ssh "root@$server_ip" 'cd /opt/valheim && docker compose logs --tail=100 -f'
 ssh "root@$server_ip" 'cd /opt/valheim && docker compose ps'
 ```
 
 The container checks for game updates and restarts when idle. To deploy a changed Compose configuration or refresh the container image, run `bash scripts/deploy.sh`; this can interrupt players, so do it while empty. The image uses the upstream `latest` tag; pin an image digest after a successful deployment if you want controlled image upgrades. Game updates inside the image remain automatic.
 
-If your home public IP changes, update `admin_cidr` and apply Terraform to regain SSH access. Cloud-init runs at creation, not on every deployment. Changing it can propose Droplet replacement; `prevent_destroy` blocks that to protect saves.
+Your home public IP can change without updating Terraform. Tailscale can relay administration traffic when direct connections are unavailable. Cloud-init runs at creation, not on every deployment. Changing it can propose Droplet replacement; `prevent_destroy` blocks that to protect saves.
 
 ## Backups and recovery
 
@@ -93,3 +97,5 @@ Destroy protection is deliberate. To retire the server, first download and verif
 - [Valheim crossplay FAQ](https://valheim.com/support/crossplay-faq/)
 - [Community container documentation](https://github.com/community-valheim-tools/valheim-server-docker)
 - [DigitalOcean Terraform provider](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs)
+- [Install Tailscale on Linux](https://tailscale.com/docs/install/linux)
+- [OpenSSH over Tailscale](https://tailscale.com/docs/reference/ssh-over-tailscale)

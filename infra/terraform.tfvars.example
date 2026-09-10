@@ -1,2 +1,1 @@
-admin_cidr = "203.0.113.10/32" # Replace with your actual public IPv4 address.
 size       = "s-4vcpu-8gb"    # $48/month before taxes; 4GB alternative: s-2vcpu-4gb ($24).

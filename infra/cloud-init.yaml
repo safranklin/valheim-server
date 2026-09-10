@@ -3,6 +3,7 @@ package_update: true
 packages:
   - docker.io
   - docker-compose-v2
+  - curl
   - unattended-upgrades
 ssh_pwauth: false
 write_files:
@@ -12,6 +13,11 @@ write_files:
       PasswordAuthentication no
       PermitRootLogin prohibit-password
 runcmd:
+  - [sh, -c, 'curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/noble.noarmor.gpg -o /usr/share/keyrings/tailscale-archive-keyring.gpg']
+  - [sh, -c, 'curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/noble.tailscale-keyring.list -o /etc/apt/sources.list.d/tailscale.list']
+  - [apt-get, update]
+  - [apt-get, install, -y, tailscale]
+  - [systemctl, enable, --now, tailscaled]
   - [systemctl, enable, --now, docker]
   - [systemctl, restart, ssh]
   - [install, -d, -m, '0700', /opt/valheim]

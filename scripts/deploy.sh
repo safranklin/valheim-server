@@ -5,7 +5,7 @@ if [[ ! -f .env ]] || grep -q 'REPLACE_WITH' .env; then
   echo 'Copy .env.example to .env and set your server password first.' >&2
   exit 1
 fi
-server_ip=$(terraform -chdir=infra output -raw server_ip)
+server_ip=${VALHEIM_HOST:?Set VALHEIM_HOST to the Droplet Tailscale IPv4 address or MagicDNS name}
 ssh "root@$server_ip" 'cloud-init status --wait >/dev/null'
 scp compose.yaml "root@$server_ip:/opt/valheim/compose.yaml"
 # Stream the secret into a restricted file; never put it in Terraform state.

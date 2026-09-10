@@ -1,0 +1,27 @@
+services:
+  valheim:
+    image: ghcr.io/community-valheim-tools/valheim-server:latest
+    restart: unless-stopped
+    stop_grace_period: 2m
+    cap_add:
+      - SYS_NICE
+    ports:
+      - "2456-2457:2456-2457/udp"
+    env_file: .env
+    environment:
+      CROSSPLAY: "true"
+      TZ: America/New_York
+      BACKUPS: "true"
+      BACKUPS_CRON: "5 * * * *"
+      BACKUPS_MAX_AGE: "7"
+      BACKUPS_MAX_COUNT: "168"
+      UPDATE_IF_IDLE: "true"
+      RESTART_IF_IDLE: "true"
+    volumes:
+      - /opt/valheim/config:/config
+      - /opt/valheim/data:/opt/valheim
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

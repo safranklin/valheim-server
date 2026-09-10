@@ -1,0 +1,17 @@
+name: Validate
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.14.0
+      - run: terraform -chdir=infra fmt -check
+      - run: terraform -chdir=infra init -backend=false
+      - run: terraform -chdir=infra validate
+      - run: bash -n scripts/deploy.sh scripts/backup.sh
+      - run: cp .env.example .env && docker compose config --quiet

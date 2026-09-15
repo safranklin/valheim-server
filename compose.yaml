@@ -7,9 +7,11 @@ services:
       - SYS_NICE
     ports:
       - "2456-2458:2456-2458/udp"
+      - "8080:80/tcp"
     env_file: .env
     environment:
       CROSSPLAY: "false"
+      STATUS_HTTP: "true"
       SERVER_ARGS: "-modifier resources most -instanceid fartheim-1"
       TZ: America/New_York
       BACKUPS: "true"

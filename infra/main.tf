@@ -56,6 +56,11 @@ resource "digitalocean_firewall" "valheim" {
     port_range       = "2456-2458"
     source_addresses = ["0.0.0.0/0"]
   }
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "8080"
+    source_addresses = ["100.64.0.0/10"]
+  }
   outbound_rule {
     protocol              = "tcp"
     port_range            = "1-65535"

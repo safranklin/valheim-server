@@ -1,6 +1,8 @@
 # Valheim on DigitalOcean
 
-Infrastructure repo for an unmodded, crossplay-enabled Valheim server: up to the standard 10 players, normally around 6, hosted in New York (`nyc3`). WSL is the management machine; it does not need to stay running for people to play.
+Infrastructure for a Steam-only Valheim server: up to the standard 10 players, normally around 6, hosted in New York (`nyc3`). WSL is the management machine; it does not need to stay running for people to play.
+
+Start from [COLD_START.md](COLD_START.md) to reproduce the setup from an empty Ubuntu WSL 2 installation. It lists required accounts, local tools, secret storage, DigitalOcean provisioning, Tailscale enrollment, deployment, recovery, and off-server backup verification.
 
 ## Cost and sizing
 
@@ -10,7 +12,9 @@ No paid backups, volumes, snapshots, or object storage are provisioned. Included
 
 ## First deployment from WSL
 
-1. Install Terraform (>=1.9, <2; CI uses 1.14.0), Git and OpenSSH. A local Terraform binary may be available under `.tools/terraform`; run `export PATH="$PWD/.tools:$PATH"` from this repo if using that copy.
+The full cold-start sequence is maintained in [COLD_START.md](COLD_START.md). The short version is:
+
+1. Install Git, OpenSSH, Tailscale, and Terraform (>=1.9, <2; CI uses 1.14.0). Run `bash scripts/install-terraform.sh` to install the pinned Terraform release into `.tools/`.
 2. Create a DigitalOcean API token with permissions to manage Droplets, SSH keys, firewalls and tags. Keep a master copy in Bitwarden and save a working copy privately (works from Bash or zsh):
 
    ```bash
@@ -58,11 +62,13 @@ No paid backups, volumes, snapshots, or object storage are provisioned. Included
    bash scripts/deploy.sh
    ```
 
-   Verify the SSH host fingerprint through the DigitalOcean console on first connection. Bootstrap and the initial Steam server download take several minutes. Deployment completion is not proof the game is ready: inspect logs and test a join from Steam and Xbox/Game Pass.
+   Verify the SSH host fingerprint through the DigitalOcean console on first connection. Bootstrap and the initial Steam server download take several minutes. Deployment completion is not proof the game is ready: inspect logs and test a Steam client connection.
 
 ## Joining and operations
 
-Crossplay is enabled without client mods. Use the in-game Join Game menu and the server join code from the startup logs, or find the configured server name in the community list. Share the password privately. Join codes can change after restarts.
+The tracked configuration includes a live read-only health dashboard at `http://TAILSCALE_SERVER_IP:8080/`. It includes the server query status and player count and updates every 10 seconds. Port 8080 is restricted to Tailscale addresses (`100.64.0.0/10`) by the DigitalOcean firewall; it is not a public web site. Deploying this configuration recreates the game container, so schedule it while the server is empty.
+
+Crossplay is currently disabled, so the server is Steam-only. Use the in-game Join Game menu and connect to the public address, or find the configured server name in the community list. Share the password privately.
 
 ```bash
 server_ip=$VALHEIM_HOST
@@ -83,6 +89,12 @@ bash scripts/backup.sh
 ```
 
 This command copies existing archives; it does not force a new save. Wait for an hourly archive and confirm its timestamp before relying on it. Local downloads are retained until you remove them. Keep a second copy outside WSL. Automatic off-server backups are not configured.
+
+To download only the newest completed archive into `~/dev/ValheimBackups`, verify it against the server's SHA-256 hash, and avoid replacing a nonmatching local file, run:
+
+```bash
+bash scripts/fetch-latest-backup.sh
+```
 
 To restore, stop the service with `docker compose stop` in `/opt/valheim`, preserve a copy of the existing config, and inspect the chosen archive before extracting it into a temporary directory. Restore the matching world files together into `/opt/valheim/config/worlds_local` (older saves use matching `.db` and `.fwl` files; preserve the whole world directory for directory-based saves). Keep `WORLD_NAME` consistent, then run `docker compose up -d`, check logs, and join to verify. Never overwrite an active world. Test recovery before trusting backups for important progress.
 

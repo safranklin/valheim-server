@@ -1,6 +1,6 @@
 # Valheim on DigitalOcean
 
-Infrastructure for a Steam-only Valheim server: up to the standard 10 players, normally around 6, hosted in New York (`nyc3`). WSL is the management machine; it does not need to stay running for people to play.
+Infrastructure for a crossplay Valheim server: up to the standard 10 players, normally around 6, hosted in New York (`nyc3`). WSL is the management machine; it does not need to stay running for people to play.
 
 Start from [COLD_START.md](COLD_START.md) to reproduce the setup from an empty Ubuntu WSL 2 installation. It lists required accounts, local tools, secret storage, DigitalOcean provisioning, Tailscale enrollment, deployment, recovery, and off-server backup verification. For the automatic offsite backup setup, see [BACKUPS.md](BACKUPS.md).
 
@@ -68,7 +68,9 @@ The full cold-start sequence is maintained in [COLD_START.md](COLD_START.md). Th
 
 The tracked configuration includes a live read-only health dashboard at `http://TAILSCALE_SERVER_IP:8080/`. It includes the server query status and player count and updates every 10 seconds. Port 8080 is restricted to Tailscale addresses (`100.64.0.0/10`) by the DigitalOcean firewall; it is not a public web site. Deploying this configuration recreates the game container, so schedule it while the server is empty.
 
-Crossplay is currently disabled, so the server is Steam-only. Use the in-game Join Game menu and connect to the public address, or find the configured server name in the community list. Share the password privately.
+Crossplay is enabled, so Steam and Xbox/Game Pass players can join. Use the in-game Join Game menu and connect to the public address, or find the configured server name in the community list. Share the password privately.
+
+PlayFab join codes are session-specific and change after a server restart. They are useful for Xbox/Game Pass players, but the public address and server-list entry are the durable connection methods.
 
 ```bash
 server_ip=$VALHEIM_HOST

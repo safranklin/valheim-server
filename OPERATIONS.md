@@ -2,8 +2,8 @@
 
 - Server name: `Fartheim`
 - World: `Fartguard`
-- Crossplay: disabled (Steam-only)
-- UDP ports: `2456-2458` published; `2458` is retained as requested though Steam-only mode normally uses `2456-2457`
+- Crossplay: enabled (Steam, Xbox, and Game Pass)
+- UDP ports: `2456-2458` published
 - Health dashboard: configured for `http://100.88.224.24:8080/` over Tailscale only; it becomes live after the next planned configuration deploy
 - Resource rate: 3× (`-modifier resources most`)
 - DigitalOcean: `nyc3`, 2 vCPU / 4 GB, $24/month before tax
@@ -18,7 +18,9 @@ export VALHEIM_HOST=100.88.224.24
 ssh "root@$VALHEIM_HOST" 'cd /opt/valheim && docker compose logs --tail=100 -f'
 ```
 
-This is a Steam-only server. Connect using the public game address above. The game password is in the ignored local `.env` and the restricted `/opt/valheim/.env` on the server.
+This is a crossplay server. Connect using the public game address above. The game password is in the ignored local `.env` and the restricted `/opt/valheim/.env` on the server.
+
+PlayFab join codes are temporary identifiers for the currently running crossplay server. A code changes on restart, so players who depend on one need the newly issued code. The public address and the server-list entry remain the durable ways to find Fartheim.
 
 Deploy configuration changes during an empty session:
 

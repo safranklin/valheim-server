@@ -170,7 +170,7 @@ ssh "root@$VALHEIM_HOST" 'cd /opt/valheim && docker compose ps'
 ssh "root@$VALHEIM_HOST" 'cd /opt/valheim && docker compose logs --tail=100 -f'
 ```
 
-The tracked configuration starts a Steam-only public server with 3× resources (`-modifier resources most`). Crossplay is disabled because the earlier PlayFab relay path was unstable. Steam players join with the Droplet public IPv4 address and port `2456`. To support Xbox/Game Pass players later, set `CROSSPLAY` to `true`, deploy while the server is empty, and test every player platform.
+The tracked configuration starts a crossplay public server with 3× resources (`-modifier resources most`). Steam, Xbox, and Game Pass players can join through the public Droplet IPv4 address and port `2456`. Deploy crossplay changes while the server is empty, then test each player platform.
 
 ## 7. Dashboard, backups, and routine operations
 

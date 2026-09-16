@@ -10,7 +10,7 @@ services:
       - "8080:80/tcp"
     env_file: .env
     environment:
-      CROSSPLAY: "false"
+      CROSSPLAY: "true"
       STATUS_HTTP: "true"
       SERVER_ARGS: "-modifier resources most -instanceid fartheim-1"
       TZ: America/New_York

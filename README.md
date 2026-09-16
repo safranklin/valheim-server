@@ -2,13 +2,13 @@
 
 Infrastructure for a Steam-only Valheim server: up to the standard 10 players, normally around 6, hosted in New York (`nyc3`). WSL is the management machine; it does not need to stay running for people to play.
 
-Start from [COLD_START.md](COLD_START.md) to reproduce the setup from an empty Ubuntu WSL 2 installation. It lists required accounts, local tools, secret storage, DigitalOcean provisioning, Tailscale enrollment, deployment, recovery, and off-server backup verification.
+Start from [COLD_START.md](COLD_START.md) to reproduce the setup from an empty Ubuntu WSL 2 installation. It lists required accounts, local tools, secret storage, DigitalOcean provisioning, Tailscale enrollment, deployment, recovery, and off-server backup verification. For the automatic offsite backup setup, see [BACKUPS.md](BACKUPS.md).
 
 ## Cost and sizing
 
 Default: Basic shared CPU, 2 vCPU / 4 GB (`s-2vcpu-4gb`), listed at $24/month before tax as checked September 9, 2026. The 4 vCPU / 8 GB alternative is $48/month and offers more headroom. Neither size guarantees performance for large builds. Check actual region availability and pricing before applying. The $48 upgrade may exceed a $50 total budget after tax.
 
-No paid backups, volumes, snapshots, or object storage are provisioned. Included transfer still has limits; overages can add charges. Set billing alerts in DigitalOcean (alerts are not spending caps). Powering a Droplet off does not stop its charges. Deletion does, but deletes world data too.
+No paid backups, volumes, snapshots, or object storage are provisioned by the normal server deployment. [BACKUPS.md](BACKUPS.md) adds a private DigitalOcean Space for automatic world archives at the $5/month Spaces minimum. Included transfer still has limits; overages can add charges. Set billing alerts in DigitalOcean (alerts are not spending caps). Powering a Droplet off does not stop its charges. Deletion does, but deletes world data too.
 
 ## First deployment from WSL
 
@@ -82,13 +82,13 @@ Your home public IP can change without updating Terraform. Tailscale can relay a
 
 ## Backups and recovery
 
-Hourly archives are retained for seven days under `/opt/valheim/config/backups`. These are on the same disk as the world: they do not protect against losing the Droplet. Download them regularly, especially after play sessions:
+Hourly archives are retained for seven days under `/opt/valheim/config/backups`. These are on the same disk as the world: they do not protect against losing the Droplet. Configure the automatic private Spaces copy in [BACKUPS.md](BACKUPS.md). Until then, download them regularly, especially after play sessions:
 
 ```bash
 bash scripts/backup.sh
 ```
 
-This command copies existing archives; it does not force a new save. Wait for an hourly archive and confirm its timestamp before relying on it. Local downloads are retained until you remove them. Keep a second copy outside WSL. Automatic off-server backups are not configured.
+This command copies existing archives; it does not force a new save. Wait for an hourly archive and confirm its timestamp before relying on it. Local downloads are retained until you remove them. Keep a second copy outside WSL.
 
 To download only the newest completed archive into `~/dev/ValheimBackups`, verify it against the server's SHA-256 hash, and avoid replacing a nonmatching local file, run:
 

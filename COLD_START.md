@@ -182,7 +182,7 @@ http://YOUR_TAILSCALE_SERVER_IP:8080/
 
 The page is not exposed through the public Internet. Applying a Compose configuration change recreates the Valheim container and briefly disconnects players, so deploy dashboard or configuration changes only while the game is empty.
 
-The container creates an archive at five minutes past every hour and retains seven days / up to 168 archives on the Droplet. These are not off-server backups. Download and verify the newest archive:
+The container creates an archive at five minutes past every hour and retains seven days / up to 168 archives on the Droplet. These are not off-server backups. Configure automatic private Spaces uploads by following [BACKUPS.md](BACKUPS.md), or download and verify the newest archive:
 
 ```bash
 bash scripts/fetch-latest-backup.sh

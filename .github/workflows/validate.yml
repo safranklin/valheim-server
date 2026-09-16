@@ -13,5 +13,5 @@ jobs:
       - run: terraform -chdir=infra fmt -check
       - run: terraform -chdir=infra init -backend=false
       - run: terraform -chdir=infra validate
-      - run: bash -n scripts/deploy.sh scripts/backup.sh scripts/fetch-latest-backup.sh scripts/install-terraform.sh
+      - run: bash -n scripts/*.sh
       - run: cp .env.example .env && docker compose config --quiet
